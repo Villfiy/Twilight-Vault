@@ -3648,6 +3648,18 @@ PrefabInstance:
       propertyPath: m_Delegates.Array.data[1].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: StopMoving
       objectReference: {fileID: 0}
+    - target: {fileID: 3233011730518066049, guid: 8101cc7d36700c949b4c42cb4999a786, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3233011730518066049, guid: 8101cc7d36700c949b4c42cb4999a786, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3233011730518066049, guid: 8101cc7d36700c949b4c42cb4999a786, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -563
+      objectReference: {fileID: 0}
     - target: {fileID: 4083006292518465023, guid: 8101cc7d36700c949b4c42cb4999a786, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -3655,6 +3667,14 @@ PrefabInstance:
     - target: {fileID: 4083006292518465023, guid: 8101cc7d36700c949b4c42cb4999a786, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: Jump
+      objectReference: {fileID: 0}
+    - target: {fileID: 4370072588062833884, guid: 8101cc7d36700c949b4c42cb4999a786, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4370072588062833884, guid: 8101cc7d36700c949b4c42cb4999a786, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4521470557412398043, guid: 8101cc7d36700c949b4c42cb4999a786, type: 3}
       propertyPath: m_Pivot.x
@@ -3739,6 +3759,14 @@ PrefabInstance:
     - target: {fileID: 5842130965790629716, guid: 8101cc7d36700c949b4c42cb4999a786, type: 3}
       propertyPath: m_Name
       value: MobileControlling
+      objectReference: {fileID: 0}
+    - target: {fileID: 8547560311325462062, guid: 8101cc7d36700c949b4c42cb4999a786, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8547560311325462062, guid: 8101cc7d36700c949b4c42cb4999a786, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
