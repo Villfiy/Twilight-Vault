@@ -27,99 +27,118 @@ public class CharacterController : MonoBehaviour
     private bool hasLandedAfterDeath = false; // Флаг для проверки, приземлился ли персонаж после смерти
     [SerializeField] private MonsterAI monster; // Ссылка на скрипт монстра
 
+    private float moveInput;             // Переменная для хранения значения движения
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();  // Инициализация компонента Animator
         timeSinceLastEmit = 0f;
         animator.SetBool("isDie", false);
+        moveInput = 0f; // Изначально персонаж не движется
     }
 
-void FixedUpdate()
-{
-    if (isDie)
+    void FixedUpdate()
     {
-        // Логика смерти
-        return;
-    }
-
-    // Проверка, находится ли персонаж на земле
-    isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
-    animator.SetBool("isGrounded", isGrounded);
-
-    // Получение входных данных для движения
-    float moveInput = Input.GetAxis("Horizontal");
-
-    // Проверка наличия стены сбоку
-    bool isTouchingWall = Physics2D.Raycast(transform.position, new Vector2(Mathf.Sign(moveInput), 0), 0.1f, groundLayer);
-
-    // Целевая скорость для персонажа
-    Vector2 targetVelocity = new Vector2(moveInput * speed, rb.velocity.y);
-
-    // Если персонаж касается стены, уменьшите горизонтальное движение
-    if (isTouchingWall && !isGrounded)
-    {
-        targetVelocity.x = 0;
-    }
-
-    // Применение сглаживания скорости
-    rb.velocity = Vector2.SmoothDamp(rb.velocity, targetVelocity, ref velocity, smoothing);
-
-    // Выполнение прыжка
-    if (isGrounded && Input.GetButtonDown("Jump"))
-    {
-        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-    }
-
-    // Управление анимацией скорости
-    animator.SetFloat("Speed", Mathf.Abs(moveInput));  // Передача скорости в Animator
-
-    // Поворот персонажа в сторону движения
-    if (moveInput > 0 && !facingRight && !isTouchingWall)
-    {
-        Flip();
-    }
-    else if (moveInput < 0 && facingRight && !isTouchingWall)
-    {
-        Flip();
-    }
-
-    // Проверка на приземление
-    if (isGrounded && !wasGrounded)
-    {
-        CreateDust();
-    }
-
-    // Управление эффектом бега
-    if (isGrounded && Mathf.Abs(moveInput) > 0)
-    {
-        if (!isRunning)
+        if (isDie)
         {
-            StartRunningDust();
+            // Логика смерти
+            return;
+        }
+
+        // Проверка, находится ли персонаж на земле
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        animator.SetBool("isGrounded", isGrounded);
+
+        // Проверка наличия стены сбоку
+        bool isTouchingWall = Physics2D.Raycast(transform.position, new Vector2(Mathf.Sign(moveInput), 0), 0.1f, groundLayer);
+
+        // Целевая скорость для персонажа
+        Vector2 targetVelocity = new Vector2(moveInput * speed, rb.velocity.y);
+
+        // Если персонаж касается стены, уменьшите горизонтальное движение
+        if (isTouchingWall && !isGrounded)
+        {
+            targetVelocity.x = 0;
+        }
+
+        // Применение сглаживания скорости
+        rb.velocity = Vector2.SmoothDamp(rb.velocity, targetVelocity, ref velocity, smoothing);
+
+        // Управление анимацией скорости
+        animator.SetFloat("Speed", Mathf.Abs(moveInput));  // Передача скорости в Animator
+
+        // Поворот персонажа в сторону движения
+        if (moveInput > 0 && !facingRight && !isTouchingWall)
+        {
+            Flip();
+        }
+        else if (moveInput < 0 && facingRight && !isTouchingWall)
+        {
+            Flip();
+        }
+
+        // Проверка на приземление
+        if (isGrounded && !wasGrounded)
+        {
+            CreateDust();
+        }
+
+        // Управление эффектом бега
+        if (isGrounded && Mathf.Abs(moveInput) > 0)
+        {
+            if (!isRunning)
+            {
+                StartRunningDust();
+            }
+            else
+            {
+                timeSinceLastEmit += Time.fixedDeltaTime;
+                if (timeSinceLastEmit >= 1f / particlesPerSecond)
+                {
+                    runParticle.Emit(1); // Создает одну частицу за раз
+                    timeSinceLastEmit = 0f;
+                }
+            }
         }
         else
         {
-            timeSinceLastEmit += Time.fixedDeltaTime;
-            if (timeSinceLastEmit >= 1f / particlesPerSecond)
+            if (isRunning)
             {
-                runParticle.Emit(1); // Создает одну частицу за раз
-                timeSinceLastEmit = 0f;
+                StopRunningDust();
             }
         }
+
+        // Обновляем значение wasGrounded
+        wasGrounded = isGrounded;
     }
-    else
+
+    // Метод для начала движения влево
+    public void MoveLeft()
     {
-        if (isRunning)
+        moveInput = Mathf.Max(moveInput - 1f, -1f);
+    }
+
+    // Метод для начала движения вправо
+    public void MoveRight()
+    {
+        moveInput = Mathf.Min(moveInput + 1f, 1f);
+    }
+
+    // Метод для остановки движения
+    public void StopMoving()
+    {
+        moveInput = 0f;
+    }
+
+    // Метод для прыжка
+    public void Jump()
+    {
+        if (isGrounded) // Прыжок только если персонаж на земле
         {
-            StopRunningDust();
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
     }
-
-    // Обновляем значение wasGrounded
-    wasGrounded = isGrounded;
-}
-
-
 
     void Flip()
     {
