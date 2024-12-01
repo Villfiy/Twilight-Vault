@@ -23,11 +23,13 @@ public class CharacterController : MonoBehaviour
 
     private float timeSinceLastEmit;
 
+
     public bool isDie = false;
     private bool hasLandedAfterDeath = false; // Флаг для проверки, приземлился ли персонаж после смерти
-    [SerializeField] private MonsterAI monster; // Ссылка на скрипт монстра
 
     private float moveInput;             // Переменная для хранения значения движения
+
+    [SerializeField] private CheckPointsController checkPointsController;
 
     void Start()
     {
@@ -36,6 +38,13 @@ public class CharacterController : MonoBehaviour
         timeSinceLastEmit = 0f;
         animator.SetBool("isDie", false);
         moveInput = 0f; // Изначально персонаж не движется
+
+        if (PlayerPrefs.GetInt("isWathed") == 1) {
+            if (PlayerPrefs.GetInt("last check point") >= 0) {
+                gameObject.transform.position = checkPointsController.getPoint();
+            }
+            PlayerPrefs.SetInt("isWathed", 0);
+        }
     }
 
     void FixedUpdate()
@@ -177,12 +186,6 @@ public class CharacterController : MonoBehaviour
         rb.gravityScale = 1; // Включаем гравитацию
         animator.SetBool("isDie", true);
         StopRunningDust();
-
-        // Уведомляем монстра о смерти игрока
-        if (monster != null)
-        {
-            monster.NotifyPlayerDeath();
-        }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -190,9 +193,12 @@ public class CharacterController : MonoBehaviour
         // Проверяем, столкнулся ли персонаж с объектом, у которого тег "Monster"
         if (collision.collider.CompareTag("Monster"))
         {
-            // Активируем состояние смерти
-            isDie = true;
-            HandleDeath();
+            MonsterAI monsterAI = collision.gameObject.GetComponent<MonsterAI>();
+            if (monsterAI != null) {
+                isDie = true;
+                HandleDeath();
+                monsterAI.NotifyPlayerDeath();
+            }
         }
     }
 

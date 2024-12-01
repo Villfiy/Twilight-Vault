@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class MonsterAI : MonoBehaviour
@@ -11,15 +12,19 @@ public class MonsterAI : MonoBehaviour
     private bool isPlayerNearby = false; // Флаг, указывающий, находится ли игрок рядом
     private bool isPlayerDead = false; // Флаг, указывающий, мертв ли игрок
 
-    private void Update()
-    {
-        if (isPlayerDead)
-        {
-            RetreatFromPlayer();
-        }
-        else if (isPlayerNearby && player != null)
-        {
-            MoveTowardsPlayer();
+
+
+    IEnumerator update() {
+        while(true) {
+            if (isPlayerDead)
+            {
+                RetreatFromPlayer();
+            }
+            else if (isPlayerNearby && player != null)
+            {
+                MoveTowardsPlayer();
+            }
+            yield return new WaitForSeconds(0.005f);
         }
     }
 
@@ -60,6 +65,7 @@ public class MonsterAI : MonoBehaviour
         {
             player = other.transform;
             isPlayerNearby = true;
+            StartCoroutine(update());
         }
     }
 
@@ -69,6 +75,7 @@ public class MonsterAI : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isPlayerNearby = false;
+            StopCoroutine(update());
         }
     }
 

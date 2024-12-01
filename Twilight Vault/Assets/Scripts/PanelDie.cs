@@ -7,6 +7,7 @@ public class PanelDie : MonoBehaviour
     public GameObject buttonResume;
     public GameObject buttonMenu;
     public GameObject panel;
+    public GameObject buttonContinue;
 
     public PortalSrcitp portalSrcitp;
 
@@ -20,6 +21,7 @@ public class PanelDie : MonoBehaviour
         buttonMenu.SetActive(false);
         buttonResume.SetActive(false);
         panel.SetActive(true);
+        buttonContinue.SetActive(false);
     }
 
     private void Update() 
@@ -39,6 +41,7 @@ public class PanelDie : MonoBehaviour
     public void ShowButtons() {
         buttonMenu.SetActive(true);
         buttonResume.SetActive(true);
+        buttonContinue.SetActive(true);
     }
 
     public void Translate() {

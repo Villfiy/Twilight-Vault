@@ -1,12 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 
 public class MenuController : MonoBehaviour
 {
 
     public Sprite spriteOn;
     public Sprite spriteOff;
+    public AudioMixer audioMixer;
 
     public Sprite imageResumeButton;
     public Sprite imageStartButton;
@@ -65,16 +67,20 @@ public class MenuController : MonoBehaviour
     private void LoadOptions() {
         if (PlayerPrefs.GetInt("Sounds") == 0) {
             ImageButtonSound.sprite = spriteOff;
+            audioMixer.SetFloat("SoundsVolume", -80);
         }
         else {
             ImageButtonSound.sprite = spriteOn;
+            audioMixer.SetFloat("SoundsVolume", 0);
         }
 
         if (PlayerPrefs.GetInt("Musics") == 0) {
             ImageButtonMusic.sprite = spriteOff;
+            audioMixer.SetFloat("MusicVolume", -80);
         }
         else {
             ImageButtonMusic.sprite = spriteOn;
+            audioMixer.SetFloat("MusicVolume", 0);
         }
     }
     private void OnApplicationQuit()
@@ -93,18 +99,22 @@ public class MenuController : MonoBehaviour
         statSounds = !statSounds;
         if (statSounds) {
             ImageButtonSound.sprite = spriteOn;
+            audioMixer.SetFloat("SoundsVolume", 0);
         }
         else {
             ImageButtonSound.sprite = spriteOff;
+            audioMixer.SetFloat("SoundsVolume", -80);
         }
     }
     public void SetMusic() {
     statMusic = !statMusic;
     if (statMusic) {
         ImageButtonMusic.sprite = spriteOn;
+        audioMixer.SetFloat("MusicVolume", 0);
     }
     else {
         ImageButtonMusic.sprite = spriteOff;
+        audioMixer.SetFloat("MusicVolume", -80);
     }
     }
 }
